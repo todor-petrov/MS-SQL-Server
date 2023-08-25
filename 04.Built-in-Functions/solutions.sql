@@ -87,3 +87,16 @@ ORDER BY [IsoCode]
 	     [Peaks] AS [p]
    WHERE RIGHT([p].[PeakName], 1) = LEFT([r].[RiverName], 1)
 ORDER BY [Mix]
+
+/* 14. Games From 2011 and 2012 Year */
+  SELECT TOP(50) [Name], FORMAT([Start], 'yyyy-MM-dd') AS [Start]
+	FROM [Games]
+   WHERE DATEPART(YEAR, [Start]) BETWEEN '2011' AND '2012'
+ORDER BY [Start], [Name]
+
+/* 15. User Email Providers */
+  SELECT [Username],
+	     SUBSTRING([Email], CHARINDEX('@', [Email]) + 1, LEN([Email]))
+	  AS [Email Provider]
+    FROM [Users]
+ORDER BY [Email Provider], [Username]
