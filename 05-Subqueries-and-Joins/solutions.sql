@@ -45,3 +45,13 @@ SELECT TOP (3) [e].[EmployeeID], [e].[FirstName]
 		ON [e].[DepartmentID] = [d].[DepartmentID]
 	 WHERE [e].[HireDate] > '1999-01-01' AND [d].[Name] IN ('Sales', 'Finance')
   ORDER BY [e].[HireDate]
+
+/* 07. Employees With Project */
+SELECT TOP (5) [e].[EmployeeID], [e].[FirstName], [p].[Name] AS ProjectName
+      FROM Employees AS [e]
+ LEFT JOIN [EmployeesProjects] as [ep]
+	    ON [e].[EmployeeID] = [ep].[EmployeeID]
+ LEFT JOIN [Projects] AS [p]
+	    ON [ep].[ProjectID] = [p].[ProjectID]
+	 WHERE [p].[StartDate] > '2002-08-13' AND [p].[EndDate] IS NULL
+	 ORDER BY [e].[EmployeeID]
