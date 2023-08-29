@@ -39,12 +39,12 @@ SELECT TOP (3) [e].[EmployeeID], [e].[FirstName]
   ORDER BY [e].[EmployeeID]
 
 /* 06. Employees Hired After */
-	SELECT [e].[FirstName], [e].[LastName], [e].[HireDate], [d].[Name] AS [DeptName]
-	  FROM Employees AS [e]
- LEFT JOIN [Departments] AS [d]
-		ON [e].[DepartmentID] = [d].[DepartmentID]
-	 WHERE [e].[HireDate] > '1999-01-01' AND [d].[Name] IN ('Sales', 'Finance')
-  ORDER BY [e].[HireDate]
+   SELECT [e].[FirstName], [e].[LastName], [e].[HireDate], [d].[Name] AS [DeptName]
+	 FROM Employees AS [e]
+LEFT JOIN [Departments] AS [d]
+	   ON [e].[DepartmentID] = [d].[DepartmentID]
+	WHERE [e].[HireDate] > '1999-01-01' AND [d].[Name] IN ('Sales', 'Finance')
+ ORDER BY [e].[HireDate]
 
 /* 07. Employees With Project */
 SELECT TOP (5) [e].[EmployeeID], [e].[FirstName], [p].[Name] AS ProjectName
@@ -55,7 +55,6 @@ SELECT TOP (5) [e].[EmployeeID], [e].[FirstName], [p].[Name] AS ProjectName
 	    ON [ep].[ProjectID] = [p].[ProjectID]
 	 WHERE [p].[StartDate] > '2002-08-13' AND [p].[EndDate] IS NULL
 	 ORDER BY [e].[EmployeeID]
-
 
 /* 08. Employee 24 */
 SELECT [e].[EmployeeID], [e].[FirstName],
@@ -90,3 +89,16 @@ INNER JOIN [Employees] AS [m]
 		ON [e].[ManagerID] = [m].[EmployeeID]
  LEFT JOIN [Departments] AS [d]
 		ON [e].[DepartmentID] = [d].[DepartmentID]
+
+/* 12. Highest Peaks in Bulgaria */
+	SELECT [mc].[CountryCode],
+		   [m].[MountainRange],
+		   [p].[PeakName],
+		   [p].[Elevation]
+	  FROM [Peaks] AS [p]
+INNER JOIN [Mountains] AS [m]
+		ON [p].[MountainId] = [m].[Id]
+INNER JOIN [MountainsCountries] AS [mc]
+		ON [m].[Id] = [mc].[MountainId]
+	 WHERE [mc].[CountryCode] = 'BG' AND [p].[Elevation] > 2835
+  ORDER BY [p].[Elevation] DESC
