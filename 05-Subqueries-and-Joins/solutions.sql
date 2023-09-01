@@ -123,3 +123,18 @@ LEFT JOIN [Continents] AS [cont]
 	   ON [c].[ContinentCode] = [cont].[ContinentCode]
 	WHERE [cont].[ContinentName] = 'Africa'
  ORDER BY [c].[CountryName]
+
+/* 15. Continents and Currencies */
+SELECT
+    ContinentCode,
+    CurrencyCode,
+    CurrencyUsage
+FROM (SELECT
+          ContinentCode,
+          CurrencyCode,
+          DENSE_RANK() OVER (PARTITION BY ContinentCode ORDER BY COUNT(*) DESC) AS Ranking,
+          COUNT(*) AS CurrencyUsage
+      FROM Countries
+      GROUP BY ContinentCode, CurrencyCode) AS RankedTable
+WHERE Ranking = 1 AND CurrencyUsage > 1
+ORDER BY ContinentCode, CurrencyCode
