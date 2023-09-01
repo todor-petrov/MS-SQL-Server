@@ -111,3 +111,15 @@ LEFT JOIN [MountainsCountries] AS [mc]
 	   ON [c].[CountryCode] = [mc].[CountryCode]
 	WHERE [c].[CountryName] IN ('Bulgaria', 'Russia', 'United States')
  GROUP BY [c].[CountryCode]
+
+/* 14. Countries With or Without Rivers */
+   SELECT TOP (5) [c].[CountryName], [r].[RiverName]
+	 FROM [Countries] AS [c]
+LEFT JOIN [CountriesRivers] AS [cr]
+	   ON [c].[CountryCode] = [cr].[CountryCode]
+LEFT JOIN [Rivers] AS [r]
+	   ON [cr].[RiverId] = [r].[Id]
+LEFT JOIN [Continents] AS [cont]
+	   ON [c].[ContinentCode] = [cont].[ContinentCode]
+	WHERE [cont].[ContinentName] = 'Africa'
+ ORDER BY [c].[CountryName]
