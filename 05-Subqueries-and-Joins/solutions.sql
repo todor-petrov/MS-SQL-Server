@@ -147,3 +147,21 @@ LEFT JOIN [MountainsCountries] AS [mc]
 LEFT JOIN [Mountains] AS [m]
 	   ON [mc].[MountainId] = [m].[Id]
 	WHERE [m].[MountainRange] IS NULL
+
+/* 17. Highest Peak and Longest River by Country */
+   SELECT top(5)[c].[CountryName],
+		  MAX([p].[Elevation]) AS [MaxPeakElevation],
+		  MAX([r].[Length]) AS [LongestRiverLength]
+     FROM [Countries] AS [c]
+LEFT JOIN [MountainsCountries] AS [mc]
+	   ON [c].[CountryCode] = [mc].[CountryCode]
+LEFT JOIN [Mountains] AS [m]
+	   ON [mc].[MountainId] = [m].[Id]
+LEFT JOIN [Peaks] AS [p]
+	   ON [m].[Id] = [p].[MountainId]
+LEFT JOIN [CountriesRivers] AS [cr]
+	   ON [cr].[CountryCode] = [c].[CountryCode]
+LEFT JOIN [Rivers] AS [r]
+	   ON [cr].[RiverId] = [r].[Id]
+ GROUP BY [c].[CountryName]
+ ORDER BY [MaxPeakElevation] DESC, [LongestRiverLength] DESC, [CountryName]
