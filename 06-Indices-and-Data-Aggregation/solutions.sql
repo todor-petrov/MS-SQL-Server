@@ -20,3 +20,8 @@ SELECT TOP(2) DepositGroup
 				FROM [WizzardDeposits]
 				GROUP BY [DepositGroup]) as sub
 	 ORDER BY AVG_Size
+
+/* 05. Deposits Sum */
+  SELECT [DepositGroup], SUM(DepositAmount)
+	FROM [WizzardDeposits]
+GROUP BY [DepositGroup]
