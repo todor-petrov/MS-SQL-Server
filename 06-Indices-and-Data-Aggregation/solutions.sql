@@ -80,3 +80,9 @@ ORDER BY FirstLetter
    WHERE DepositStartDate > '01/01/1985'
 GROUP BY DepositGroup, IsDepositExpired
 ORDER BY DepositGroup DESC, IsDepositExpired
+
+-- 13. Departments Total Salaries
+  SELECT DepartmentID, SUM(Salary) AS TotalSalary
+	FROM Employees
+GROUP BY DepartmentID
+ORDER BY DepartmentID
