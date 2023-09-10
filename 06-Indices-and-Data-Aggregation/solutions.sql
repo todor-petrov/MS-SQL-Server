@@ -72,3 +72,11 @@ SELECT AgeGroup, COUNT(AgeGroup) AS WizzardCount
    WHERE DepositGroup = 'Troll Chest'
 GROUP BY LEFT(FirstName, 1)
 ORDER BY FirstLetter
+
+-- 11. Average Interest
+  SELECT DepositGroup, IsDepositExpired,
+		 AVG(DepositInterest) AS AverageInterest
+	FROM WizzardDeposits
+   WHERE DepositStartDate > '01/01/1985'
+GROUP BY DepositGroup, IsDepositExpired
+ORDER BY DepositGroup DESC, IsDepositExpired
