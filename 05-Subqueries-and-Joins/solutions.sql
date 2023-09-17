@@ -212,7 +212,7 @@ LEFT JOIN Rivers AS r
 		  ,LongestRiverLength DESC
 		  ,c.CountryName
 
--- 18. Highest Peak Name and Elevation by Country
+-- 18. Highest Peak Name and Elevation by Country - I
   SELECT 
 		  result.CountryName AS Country
 	     ,ISNULL(result.PeakName, '(no highest peak)') AS [Highest Peak Name]
@@ -232,5 +232,30 @@ LEFT JOIN Rivers AS r
 	     LEFT JOIN Mountains AS m ON mc.MountainId = m.Id
 	     LEFT JOIN Peaks AS p ON m.Id = p.MountainId
 	     ) AS result
+   WHERE elevation_rank = 1
+ORDER BY result.CountryName, result.PeakName
+
+
+-- 18. Highest Peak Name and Elevation by Country - II
+;WITH result AS (
+		    SELECT c.CountryName
+			       ,p.PeakName
+			       ,p.Elevation
+			       ,DENSE_RANK() OVER (
+								       PARTITION BY c.CountryName
+								       ORDER BY p.Elevation DESC
+								       ) AS elevation_rank
+			       ,m.MountainRange
+		      FROM Countries AS c
+	     LEFT JOIN MountainsCountries AS mc ON c.CountryCode = mc.CountryCode
+	     LEFT JOIN Mountains AS m ON mc.MountainId = m.Id
+	     LEFT JOIN Peaks AS p ON m.Id = p.MountainId
+	     )
+  SELECT 
+		  CountryName AS Country
+	     ,ISNULL(PeakName, '(no highest peak)') AS [Highest Peak Name]
+	     ,ISNULL(Elevation, '0') AS [Highest Peak Elevation]
+	     ,ISNULL(MountainRange, '(no mountain)') AS Mountain
+	FROM result
    WHERE elevation_rank = 1
 ORDER BY result.CountryName, result.PeakName
