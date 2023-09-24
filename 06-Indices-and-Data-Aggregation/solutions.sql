@@ -149,3 +149,19 @@ SELECT COUNT(*) AS [Count]
 			FROM Employees) AS s
    WHERE s.salary_rank = 3
 GROUP BY DepartmentID, ThirdHighestSalary
+
+-- 19. **Salary Challenge
+  SELECT TOP 10
+		 FirstName
+		 ,LastName
+		 ,DepartmentID
+	FROM (
+		  SELECT FirstName
+				 ,LastName
+				 ,DepartmentID
+				 ,Salary
+				 ,AVG(Salary) OVER (PARTITION BY DepartmentID) AS AvgSalary
+			FROM Employees
+		 ) AS sourse
+   WHERE sourse.Salary > sourse.AvgSalary
+ORDER BY sourse.DepartmentID
