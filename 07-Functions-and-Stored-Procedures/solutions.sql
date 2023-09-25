@@ -33,3 +33,20 @@ CREATE PROC usp_GetTownsStartingWith @String VARCHAR(10)
 		END
 
 EXEC dbo.usp_GetTownsStartingWith 'b'
+
+-- 04. Employees from Town
+GO
+CREATE PROC usp_GetEmployeesFromTown @Town VARCHAR(100)
+		 AS
+	  BEGIN
+			SELECT e.FirstName
+				   ,e.LastName
+			  FROM Addresses AS a
+			  JOIN Employees AS e
+			    ON a.AddressID = e.AddressID
+			  JOIN Towns AS t
+			    ON a.TownID = t.TownID
+			 WHERE t.[Name] = @Town
+		END
+
+EXEC dbo.usp_GetEmployeesFromTown 'Sofia'
