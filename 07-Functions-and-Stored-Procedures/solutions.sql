@@ -66,3 +66,38 @@ CREATE FUNCTION ufn_GetSalaryLevel (@salary DECIMAL(18,4))
 GO
 
 SELECT dbo.ufn_GetSalaryLevel(13500)
+
+-- 06. Employees by Salary Level
+GO
+CREATE PROC usp_EmployeesBySalaryLevel @salaryLevel VARCHAR(10)
+		 AS
+	  BEGIN
+			SELECT FirstName
+				   ,LastName
+			  FROM Employees
+			 WHERE dbo.ufn_GetSalaryLevel (Salary) = @salaryLevel
+	    END
+
+EXEC dbo.usp_EmployeesBySalaryLevel 'High'
+
+-- 07. Define Function
+GO
+CREATE FUNCTION ufn_IsWordComprised(@setOfLetters VARCHAR(50), @word VARCHAR(50))
+    RETURNS BIT
+             AS
+          BEGIN
+                DECLARE @wordIndex INT = 1;
+                WHILE (@wordIndex <= LEN(@word))
+                BEGIN
+                      DECLARE @currentCharacter CHAR = SUBSTRING(@word, @wordIndex, 1);
+                      IF CHARINDEX(@currentCharacter, @setOfLetters) = 0
+                      BEGIN
+							RETURN 0;
+                      END
+                            SET @wordIndex += 1;
+                END
+                    RETURN 1;
+            END
+GO
+SELECT [dbo].[ufn_IsWordComprised]('oistmiahf', 'h!alves')
+ 
