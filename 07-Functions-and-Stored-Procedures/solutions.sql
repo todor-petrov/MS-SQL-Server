@@ -101,3 +101,52 @@ CREATE FUNCTION ufn_IsWordComprised(@setOfLetters VARCHAR(50), @word VARCHAR(50)
 GO
 SELECT [dbo].[ufn_IsWordComprised]('oistmiahf', 'h!alves')
  
+-- 08. Delete Employees and Departments
+GO
+CREATE PROCEDURE usp_DeleteEmployeesFromDepartment @departmentId INT
+              AS
+           BEGIN
+                 DECLARE @employeesToDelete TABLE ([Id] INT);            
+                 INSERT INTO @employeesToDelete
+                        SELECT [EmployeeID] 
+                          FROM [Employees]
+                         WHERE [DepartmentID] = @departmentId
+ 
+                  DELETE FROM [EmployeesProjects]
+                   WHERE [EmployeeID] IN (
+                                          SELECT * 
+                                            FROM @employeesToDelete
+                                           )
+
+                  ALTER TABLE [Departments]
+                  ALTER COLUMN [ManagerID] INT
+                    
+                  UPDATE [Departments]
+                     SET [ManagerID] = NULL
+                   WHERE [ManagerID] IN (
+                                         SELECT *
+                                           FROM @employeesToDelete
+                                          )
+
+                   UPDATE [Employees]
+                      SET [ManagerID] = NULL
+                    WHERE [ManagerID] IN (
+                                           SELECT *
+                                             FROM @employeesToDelete
+                                          )
+ 
+                   DELETE
+                     FROM [Employees]
+                    WHERE [DepartmentID] = @departmentId
+ 
+                   DELETE 
+                     FROM [Departments]
+                    WHERE [DepartmentID] = @departmentId
+ 
+                   SELECT COUNT(*)
+                     FROM [Employees]
+                    WHERE [DepartmentID] = @departmentId
+             END
+GO
+ 
+EXEC [dbo].[usp_DeleteEmployeesFromDepartment] 7
