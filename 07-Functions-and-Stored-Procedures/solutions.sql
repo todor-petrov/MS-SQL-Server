@@ -191,17 +191,36 @@ CREATE PROC usp_GetHoldersWithBalanceHigherThan @amount MONEY
 
 -- 11. Future Value Function
 GO
-CREATE FUNCTION ufn_CalculateFutureValue (@sum DECIMAL(10, 4), @yearlyInterestRate FLOAT, @numberOfYears INT)
-		RETURNS DECIMAL(10, 4)
+CREATE or alter FUNCTION ufn_CalculateFutureValue (@sum MONEY, @yearlyInterestRate FLOAT, @numberOfYears INT)
+		RETURNS DECIMAL(15, 4)
 			 AS
 		  BEGIN
-				DECLARE @futureValue DECIMAL(10, 4)
+				DECLARE @futureValue DECIMAL(15, 4)
 				SET @futureValue = @sum * POWER((1 + @yearlyInterestRate), @numberOfYears)
 				RETURN @futureValue
 			END
 GO
 
 SELECT dbo.ufn_CalculateFutureValue (1000, 0.1, 5)
+
+
+-- 12. Calculating Interest
+--CREATE PROC usp_CalculateFutureValueForAccount 
+GO
+CREATE PROC usp_CalculateFutureValueForAccount @AccountId INT, @interestRate FLOAT
+	AS
+ BEGIN
+	   SELECT a.Id AS [Account Id]
+			  ,ah.FirstName AS [First Name]
+			  ,ah.LastName AS [Last Name]
+			  ,a.Balance AS [Current Balance]
+			  ,dbo.ufn_CalculateFutureValue(a.Balance, @interestRate, 5) AS [Balance in 5 years]
+		 FROM AccountHolders AS ah
+		 JOIN Accounts AS a ON ah.Id = a.AccountHolderId
+		WHERE a.Id = @AccountId
+  END
+
+EXEC dbo.usp_CalculateFutureValueForAccount 2, 0.1
 
 
 -- 13. *Scalar Function: Cash in User Games Odd Rows
