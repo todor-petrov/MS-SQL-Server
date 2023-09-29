@@ -162,6 +162,22 @@ CREATE PROC usp_GetHoldersFullName
 
 EXEC dbo.usp_GetHoldersFullName
 
+-- 10. People with Balance Higher Than
+GO
+CREATE PROC usp_GetHoldersWithBalanceHigherThan @amount MONEY
+	AS
+ BEGIN
+		SELECT ah.FirstName
+			   ,ah.LastName
+		  FROM AccountHolders AS ah
+	 LEFT JOIN Accounts AS a
+			ON ah.Id = a.AccountHolderId
+	  GROUP BY FirstName, LastName
+	    HAVING SUM(a.Balance) > @amount
+	  ORDER BY ah.FirstName, ah.LastName
+  END
+
+ EXEC dbo.usp_GetHoldersWithBalanceHigherThan 20000
 
 -- 13. *Scalar Function: Cash in User Games Odd Rows
 GO
