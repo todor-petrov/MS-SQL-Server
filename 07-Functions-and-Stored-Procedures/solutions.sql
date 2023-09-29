@@ -10,6 +10,7 @@ CREATE PROC usp_GetEmployeesSalaryAbove35000
 
 EXEC dbo.usp_GetEmployeesSalaryAbove35000
 
+
 -- 02. Employees with Salary Above Number
 GO
 CREATE PROC usp_GetEmployeesSalaryAboveNumber (@Number DECIMAL(18, 4))
@@ -22,6 +23,7 @@ CREATE PROC usp_GetEmployeesSalaryAboveNumber (@Number DECIMAL(18, 4))
 
 EXEC dbo.usp_GetEmployeesSalaryAboveNumber 48100
 
+
 -- 03. Town Names Starting With
 GO
 CREATE PROC usp_GetTownsStartingWith @String VARCHAR(10)
@@ -33,6 +35,7 @@ CREATE PROC usp_GetTownsStartingWith @String VARCHAR(10)
 		END
 
 EXEC dbo.usp_GetTownsStartingWith 'b'
+
 
 -- 04. Employees from Town
 GO
@@ -51,6 +54,7 @@ CREATE PROC usp_GetEmployeesFromTown @Town VARCHAR(50)
 
 EXEC dbo.usp_GetEmployeesFromTown 'Sofia'
 
+
 -- 05. Salary Level Function
 GO
 CREATE FUNCTION ufn_GetSalaryLevel (@salary DECIMAL(18,4))
@@ -67,6 +71,7 @@ GO
 
 SELECT dbo.ufn_GetSalaryLevel(13500)
 
+
 -- 06. Employees by Salary Level
 GO
 CREATE PROC usp_EmployeesBySalaryLevel @salaryLevel VARCHAR(10)
@@ -79,6 +84,7 @@ CREATE PROC usp_EmployeesBySalaryLevel @salaryLevel VARCHAR(10)
 	    END
 
 EXEC dbo.usp_EmployeesBySalaryLevel 'High'
+
 
 -- 07. Define Function
 GO
@@ -100,7 +106,8 @@ CREATE FUNCTION ufn_IsWordComprised(@setOfLetters VARCHAR(50), @word VARCHAR(50)
             END
 GO
 SELECT [dbo].[ufn_IsWordComprised]('oistmiahf', 'h!alves')
- 
+
+
 -- 08. Delete Employees and Departments
 GO
 CREATE PROCEDURE usp_DeleteEmployeesFromDepartment @departmentId INT
@@ -151,6 +158,7 @@ GO
  
 EXEC [dbo].[usp_DeleteEmployeesFromDepartment] 7
 
+
 -- 09. Find Full Name
 GO
 CREATE PROC usp_GetHoldersFullName
@@ -161,6 +169,7 @@ CREATE PROC usp_GetHoldersFullName
    END
 
 EXEC dbo.usp_GetHoldersFullName
+
 
 -- 10. People with Balance Higher Than
 GO
@@ -178,6 +187,22 @@ CREATE PROC usp_GetHoldersWithBalanceHigherThan @amount MONEY
   END
 
  EXEC dbo.usp_GetHoldersWithBalanceHigherThan 20000
+
+
+-- 11. Future Value Function
+GO
+CREATE FUNCTION ufn_CalculateFutureValue (@sum DECIMAL(10, 4), @yearlyInterestRate FLOAT, @numberOfYears INT)
+		RETURNS DECIMAL(10, 4)
+			 AS
+		  BEGIN
+				DECLARE @futureValue DECIMAL(10, 4)
+				SET @futureValue = @sum * POWER((1 + @yearlyInterestRate), @numberOfYears)
+				RETURN @futureValue
+			END
+GO
+
+SELECT dbo.ufn_CalculateFutureValue (1000, 0.1, 5)
+
 
 -- 13. *Scalar Function: Cash in User Games Odd Rows
 GO
