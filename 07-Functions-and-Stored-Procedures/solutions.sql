@@ -151,6 +151,16 @@ GO
  
 EXEC [dbo].[usp_DeleteEmployeesFromDepartment] 7
 
+-- 09. Find Full Name
+GO
+CREATE PROC usp_GetHoldersFullName
+	AS
+ BEGIN
+	   SELECT CONCAT(FirstName, ' ', LastName) AS [Full Name]
+	   FROM AccountHolders
+   END
+
+EXEC dbo.usp_GetHoldersFullName
 
 
 -- 13. *Scalar Function: Cash in User Games Odd Rows
@@ -181,3 +191,4 @@ CREATE FUNCTION ufn_CashInUsersGames(@gameName NVARCHAR(50))
 GO
  
 SELECT * FROM [dbo].[ufn_CashInUsersGames]('Love in a mist')
+DROP DATABASE SoftUni
