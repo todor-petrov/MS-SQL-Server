@@ -1,0 +1,347 @@
+--•	Id – unique number. For every person there will be no more than 231-1 people (auto incremented).
+--•	Name – full name of the person. There will be no more than 200 Unicode characters (not null).
+--•	Picture – image with size up to 2 MB (allow nulls).
+--•	Height – in meters. Real number precise up to 2 digits after floating point (allow nulls).
+--•	Weight – in kilograms. Real number precise up to 2 digits after floating point (allow nulls).
+--•	Gender – possible states are m or f (not null).
+--•	Birthdate – (not null).
+--•	Biography – detailed biography of the person. It can contain max allowed Unicode characters (allow nulls).
+--CREATE TABLE People (
+--					 Id INT IDENTITY PRIMARY KEY,
+--					 [Name] VARCHAR(200) NOT NULL,
+--					 Picture VARBINARY(MAX),
+--					 Height DECIMAL(6, 2),
+--					 [Weight] DECIMAL(6, 2),
+--					 Gender CHAR(1) CHECK (Gender IN ('m', 'f')),
+--					 Birthdate DATE NOT NULL,
+--					 Biography VARCHAR(MAX)
+--					 )
+
+--INSERT INTO People([Name], Birthdate)
+--	 VALUES ('Jack Daniels', '1898-12-12'),
+--			('Jack Daniels', '1898-12-12'),
+--			('Jack Daniels', '1898-12-12'),
+--			('Jack Daniels', '1898-12-12'),
+--			('Jack Daniels', '1898-12-12')
+
+--•	Id – unique number for every user. There will be no more than 263-1 users (auto incremented).
+--•	Username – unique identifier of the user. It will be no more than 30 characters (non Unicode)  (required).
+--•	Password – password will be no longer than 26 characters (non Unicode) (required).
+--•	ProfilePicture – image with size up to 900 KB. 
+--•	LastLoginTime
+--•	IsDeleted – shows if the user deleted his/her profile. Possible states are true or false.
+
+--CREATE TABLE Users (
+--					Id INT IDENTITY PRIMARY KEY,
+--					Username VARCHAR(30) UNIQUE NOT NULL,
+--					[Password] VARCHAR(26) NOT NULL,
+--					ProfilePicture VARBINARY(MAX),
+--					CHECK (DATALENGTH(ProfilePicture) <= 900000),
+--					LastLoginTime DATETIME2,
+--					IsDeleted VARCHAR(5) CHECK (IsDeleted IN ('true', 'false'))
+--					)
+--INSERT INTO Users (Username, [Password])
+--	 VALUES ('jack_daniels', 'jack_daniels'),
+--			('jim_beam', 'jim_beam'),
+--			('captain_morgan', 'captain_morgan'),
+--			('cutty_sark', 'cutty_sark'),
+--			('johnnie_walker', 'johnnie_walker')
+--ALTER TABLE Users DROP CONSTRAINT [PK__Users__3214EC07D70B41A6]
+--ALTER TABLE Users ADD CONSTRAINT [min_length] CHECK (DATALENGTH([Password]) >= 5)
+--ALTER TABLE Users ADD CONSTRAINT [default_last_login_time] DEFAULT GETDATE() FOR LastLoginTime
+--ALTER TABLE Users DROP CONSTRAINT [new_primary_key]
+--ALTER TABLE Users ADD PRIMARY KEY (Id)
+--ALTER TABLE Users ADD UNIQUE (Username)
+--ALTER TABLE Users ADD CONSTRAINT [min_length_username] CHECK (DATALENGTH([Username]) >= 3)
+
+--•	Directors (Id, DirectorName, Notes)
+--•	Genres (Id, GenreName, Notes)
+--•	Categories (Id, CategoryName, Notes)
+--•	Movies (Id, Title, DirectorId, CopyrightYear, Length, GenreId, CategoryId, Rating, Notes)
+--CREATE DATABASE Movies
+--GO
+--USE Movies
+--CREATE TABLE Directors (
+--						Id INT IDENTITY PRIMARY KEY,
+--						DirectorName VARCHAR(100) NOT NULL,
+--						Notes VARCHAR(MAX)
+--						)
+--CREATE TABLE Genres (
+--					 Id INT IDENTITY PRIMARY KEY,
+--					 GenreName VARCHAR(50) NOT NULL,
+--					 Notes VARCHAR(MAX)
+--					 )
+--CREATE TABLE Categories (
+--						 Id INT IDENTITY PRIMARY KEY,
+--						 CategoryName VARCHAR(100) NOT NULL,
+--						 Notes VARCHAR(MAX)
+--						 )
+--CREATE TABLE Movies (
+--					 Id INT IDENTITY PRIMARY KEY,
+--					 Title VARCHAR(50) NOT NULL,
+--					 DirectorId INT FOREIGN KEY REFERENCES Directors (Id),
+--					 CopyrightYear INT CHECK (CopyrightYear >= 1000 AND CopyrightYear <= 9999),
+--					 [Length] INT,
+--					 GenreId INT FOREIGN KEY REFERENCES Genres (Id),
+--					 CategoryId INT FOREIGN KEY REFERENCES Categories (Id),
+--					 Rating INT,
+--					 Notes VARCHAR(200)
+--					 )
+--INSERT INTO Directors (DirectorName)
+--	 VALUES ('Martin Scorsese'),
+--			('Alfred Hitchcock'),
+--			('Steven Spielberg'),
+--			('Stanley Kubrick'),
+--			('Francis Ford Coppola')
+--INSERT INTO Genres (GenreName)
+--	 VALUES ('Horror'),
+--			('Action'),
+--			('Thriller'),
+--			('Drama'),
+--			('Science fiction')
+--INSERT INTO Categories (CategoryName)
+--	 VALUES ('Fantasy'),
+--			('Romance'),
+--			('Musical'),
+--			('Mystery'),
+--			('Crime')
+--INSERT INTO Movies (Title)
+--	 VALUES ('The Godfather'),
+--			('The Departed'),
+--			('White Heat'),
+--			('Mafioso'),
+--			('The Dark Knight')
+
+--CREATE DATABASE CarRental
+--USE CarRental
+--•	Categories (Id, CategoryName, DailyRate, WeeklyRate, MonthlyRate, WeekendRate)
+--•	Cars (Id, PlateNumber, Manufacturer, Model, CarYear, CategoryId, Doors, Picture, Condition, Available)
+--•	Employees (Id, FirstName, LastName, Title, Notes)
+--•	Customers (Id, DriverLicenceNumber, FullName, Address, City, ZIPCode, Notes)
+--•	RentalOrders (Id, EmployeeId, CustomerId, CarId, TankLevel, KilometrageStart, KilometrageEnd, TotalKilometrage, StartDate, EndDate, TotalDays, RateApplied, TaxRate, OrderStatus, Notes)
+--CREATE TABLE Categories (
+--						 Id INT IDENTITY PRIMARY KEY,
+--						 CategoryName VARCHAR(50) NOT NULL,
+--						 DailyRate VARCHAR(10),
+--						 WeeklyRate VARCHAR(10),
+--						 MonthlyRate VARCHAR(10),
+--						 WeekendRate VARCHAR(10),
+--						 )
+--CREATE TABLE Cars (
+--				   Id INT IDENTITY PRIMARY KEY,
+--				   PlateNumber INT,
+--				   Manufacturer VARCHAR(50),
+--				   Model VARCHAR(50),
+--				   CarYear  INT,
+--				   CategoryId INT FOREIGN KEY REFERENCES Categories (Id),
+--				   Doors INT,
+--				   Picture VARBINARY(MAX),
+--				   Condition VARCHAR(30),
+--				   Available VARCHAR(5)
+--				   )
+--CREATE TABLE Employees (
+--						Id INT IDENTITY PRIMARY KEY,
+--						FirstName VARCHAR(50) NOT NULL,
+--						LastName VARCHAR(50),
+--						Title VARCHAR(50),
+--						Notes VARCHAR(50),
+--						)
+--CREATE TABLE Customers (
+--						Id INT IDENTITY PRIMARY KEY,
+--						DriverLicenceNumber INT,
+--						FullName  VARCHAR(50),
+--						[Address] VARCHAR(50),
+--						City VARCHAR(50),
+--						ZIPCode VARCHAR(50),
+--						Notes VARCHAR(50),
+--						)
+--CREATE TABLE RentalOrders (
+--						   Id INT IDENTITY PRIMARY KEY,
+--						   EmployeeId INT FOREIGN KEY REFERENCES Employees (Id),
+--						   CustomerId INT FOREIGN KEY REFERENCES Customers (Id),
+--						   CarId INT FOREIGN KEY REFERENCES Cars (Id),
+--						   TankLevel INT,
+--						   KilometrageStart INT,
+--						   KilometrageEnd INT,
+--						   TotalKilometrage INT,
+--						   StartDate DATE,
+--						   EndDate DATE,
+--						   TotalDays INT,
+--						   RateApplied INT,
+--						   TaxRate INT,
+--						   OrderStatus CHAR(5),
+--						   Notes VARCHAR(MAX)
+--						   )
+--INSERT INTO Categories (CategoryName)
+--	 VALUES ('Car'), ('Van'), ('Truck')
+--INSERT INTO Cars (PlateNumber)
+--	 VALUES (123456789), (987654321), (543216789)
+--INSERT INTO Employees (FirstName)
+--	 VALUES ('Jack'), ('Jim'), ('Johnnie')
+--INSERT INTO Customers (DriverLicenceNumber)
+--	 VALUES (12345), (54321), (67895)
+--INSERT INTO RentalOrders (TankLevel)
+--	 VALUES (68), (90), (74)
+
+--CREATE DATABASE Hotel
+--GO
+--USE Hotel
+--•	Employees (Id, FirstName, LastName, Title, Notes)
+--•	Customers (AccountNumber, FirstName, LastName, PhoneNumber, EmergencyName, EmergencyNumber, Notes)
+--•	RoomStatus (RoomStatus, Notes)
+--•	RoomTypes (RoomType, Notes)
+--•	BedTypes (BedType, Notes)
+--•	Rooms (RoomNumber, RoomType, BedType, Rate, RoomStatus, Notes)
+--•	Payments (Id, EmployeeId, PaymentDate, AccountNumber, FirstDateOccupied, LastDateOccupied, TotalDays, AmountCharged, TaxRate, TaxAmount, PaymentTotal, Notes)
+--•	Occupancies (Id, EmployeeId, DateOccupied, AccountNumber, RoomNumber, RateApplied, PhoneCharge, Notes)
+
+--CREATE TABLE Employees (
+--						Id INT IDENTITY PRIMARY KEY,
+--						FirstName VARCHAR(20) NOT NULL,
+--						LastName VARCHAR(20),
+--						Title VARCHAR(20),
+--						Notes VARCHAR(MAX)
+--						)
+--CREATE TABLE Customers (
+--						Id INT IDENTITY PRIMARY KEY,
+--						AccountNumber INT,
+--						FirstName VARCHAR(20) NOT NULL,
+--						LastName VARCHAR(20),
+--						PhoneNumber VARCHAR(20),
+--						EmergencyName VARCHAR(20),
+--						EmergencyNumber VARCHAR(20),
+--						Notes VARCHAR(MAX)
+--						)
+--CREATE TABLE RoomStatus (
+--						 Id INT IDENTITY PRIMARY KEY,
+--						 RoomStatus VARCHAR(5) NOT NULL,
+--						 Notes VARCHAR(MAX)
+--						 )
+--CREATE TABLE RoomTypes (
+--						Id INT IDENTITY PRIMARY KEY,
+--						RoomType VARCHAR(20) NOT NULL,
+--						Notes VARCHAR(MAX)
+--						)
+--CREATE TABLE BedTypes (
+--					   Id INT IDENTITY PRIMARY KEY,
+--					   BedType VARCHAR(20) NOT NULL,
+--					   Notes VARCHAR(MAX)
+--					   )
+--CREATE TABLE Rooms (
+--					Id INT IDENTITY PRIMARY KEY,
+--					RoomNumber INT UNIQUE NOT NULL,
+--					RoomType INT FOREIGN KEY REFERENCES RoomTypes (Id),
+--					BedType INT FOREIGN KEY REFERENCES BedTypes (Id),
+--					Rate INT,
+--					RoomStatus INT FOREIGN KEY REFERENCES RoomStatus (Id),
+--					Notes VARCHAR(MAX)
+--					)
+--CREATE TABLE Payments (
+--					   Id INT IDENTITY PRIMARY KEY,
+--					   EmployeeId INT FOREIGN KEY REFERENCES Employees (Id),
+--					   PaymentDate DATE,
+--					   AccountNumber INT,
+--					   FirstDateOccupied DATE,
+--					   LastDateOccupied DATE,
+--					   TotalDays DATE,
+--					   AmountCharged DECIMAL(8, 2),
+--					   TaxRate INT,
+--					   TaxAmount DECIMAL(8, 2),
+--					   PaymentTotal DECIMAL(8, 2),
+--					   Notes VARCHAR(MAX)
+--					   )
+--CREATE TABLE Occupancies (
+--						  Id INT IDENTITY PRIMARY KEY,
+--						  EmployeeId INT FOREIGN KEY REFERENCES Employees (Id),
+--						  DateOccupied DATE,
+--						  AccountNumber INT,
+--						  RoomNumber INT FOREIGN KEY REFERENCES Rooms(Id),
+--						  RateApplied INT,
+--						  PhoneCharge DECIMAL(8, 2),
+--						  Notes VARCHAR(MAX)
+--						  )
+--INSERT INTO Employees (FirstName)
+--	 VALUES ('John'), ('Jack'), ('MongoDB')
+--INSERT INTO Customers (FirstName)
+--	 VALUES ('C#'), ('Python'), ('JavaScript')
+--INSERT INTO RoomStatus (RoomStatus)
+--	 VALUES ('True'), ('False'), ('None')
+--INSERT INTO RoomTypes (RoomType)
+--	 VALUES ('Single'), ('Double'), ('Apartment')
+--INSERT INTO BedTypes (BedType)
+--	 VALUES ('Single'), ('Double'), ('Sofa')
+--INSERT INTO Rooms (RoomNumber)
+--	 VALUES (10), (11), (12)
+--INSERT INTO Payments (AccountNumber)
+--	 VALUES (1234), (5678), (9876)
+--INSERT INTO Occupancies (AccountNumber)
+--	 VALUES (2345), (8765), (4536)
+
+--CREATE DATABASE SoftUni
+--GO
+--USE SoftUni
+--CREATE TABLE Towns (
+--					Id INT IDENTITY PRIMARY KEY,
+--					[Name] VARCHAR(50) NOT NULL
+--					)
+--CREATE TABLE Addresses (
+--						Id INT IDENTITY PRIMARY KEY,
+--						AddressText VARCHAR(100),
+--						TownId INT FOREIGN KEY REFERENCES Towns(Id)
+--						)
+--CREATE TABLE Departments (
+--						  Id INT IDENTITY PRIMARY KEY,
+--						  [Name] VARCHAR(50) NOT NULL
+--						  )
+--CREATE TABLE Employees (
+--						Id INT IDENTITY PRIMARY KEY,
+--						FirstName VARCHAR(50) NOT NULL,
+--						MiddleName VARCHAR(50) NOT NULL,
+--						LastName VARCHAR(50) NOT NULL,
+--						JobTitle VARCHAR(50) NOT NULL,
+--						DepartmentId INT FOREIGN KEY REFERENCES Departments(Id),
+--						HireDate DATE NOT NULL,
+--						Salary DECIMAL(10, 2) NOT NULL,
+--						AddressId INT FOREIGN KEY REFERENCES Addresses(Id)
+--						)
+
+--INSERT INTO Towns([Name])
+--	 VALUES ('Sofia'), ('Plovdiv'), ('Varna'), ('Burgas')
+--INSERT INTO Departments([Name])
+--	 VALUES ('Engineering'), ('Sales'), ('Marketing'), ('Software Development'), ('Quality Assurance')
+--INSERT INTO Employees(FirstName, MiddleName, LastName, JobTitle, DepartmentId, HireDate, Salary)
+--	 VALUES ('Ivan', 'Ivanov', 'Ivanov', '.NET Developer', 4, '2013-02-01', 3500.00),
+--			('Petar', 'Petrov', 'Petrov', 'Senior Engineer', 1, '2004-03-02', 4000.00),
+--			('Maria', 'Petrova', 'Ivanova', 'Intern', 5, '2016-08-28', 525.25),
+--			('Georgi', 'Teziev', 'Ivanov', 'CEO', 2, '2007-12-09', 3000.00),
+--			('Peter', 'Pan', 'Pan', 'Intern', 3, '2016-08-28', 599.88)
+
+--  SELECT [Name]
+--    FROM Towns
+--ORDER BY [Name]
+--  SELECT [Name]
+--    FROM Departments
+--ORDER BY [Name]
+--  SELECT FirstName, LastName, JobTitle, Salary
+--    FROM Employees
+--ORDER BY Salary DESC
+
+--UPDATE Employees
+--   SET Salary = Salary * 1.1
+--SELECT Salary
+--  FROM Employees
+
+--USE Hotel
+
+--UPDATE Payments
+--   SET AmountCharged = AmountCharged * 0.97
+--UPDATE Payments
+--   SET TaxRate = TaxRate * 0.97
+--UPDATE Payments
+--   SET TaxAmount = TaxAmount * 0.97
+--UPDATE Payments
+--   SET PaymentTotal = PaymentTotal * 0.97
+--SELECT TaxRate
+--  FROM Payments
+
+--TRUNCATE TABLE Occupancies
