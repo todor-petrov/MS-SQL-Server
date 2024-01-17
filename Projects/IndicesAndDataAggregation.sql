@@ -102,3 +102,13 @@
 --		 ,IsDepositExpired
 --ORDER BY DepositGroup DESC
 --		 ,IsDepositExpired
+
+
+--12. *Rich Wizard, Poor Wizard
+
+--SELECT ABS(SUM(a.DepositDifference)) AS SumDifference
+--  FROM (
+--		SELECT LEAD(DepositAmount, 1)
+--			   OVER (ORDER BY Id) - DepositAmount AS DepositDifference
+--		  FROM WizzardDeposits) AS a
+
