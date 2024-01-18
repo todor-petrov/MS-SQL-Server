@@ -176,3 +176,27 @@
 --		   FROM Employees
 --		) AS a
 -- WHERE a.SalaryRange = 3
+
+
+--19. **Salary Challenge
+--   SELECT TOP 10
+--		  FirstName, LastName, e.DepartmentID
+--	 FROM Employees AS e
+--LEFT JOIN (
+--		     SELECT DepartmentID
+--				    ,AVG(salary) AS AvgSalary
+--			   FROM Employees
+--		   GROUP BY DepartmentID
+--		   ) AS es
+--	   ON e.DepartmentID = es.DepartmentID
+--	WHERE e.Salary > es.AvgSalary
+-- ORDER BY e.DepartmentID
+
+--19.1 Salary Challenge
+--SELECT TOP 10 FirstName, LastName, DepartmentID
+--  FROM Employees AS p
+-- WHERE Salary > (
+--				 SELECT Avg(Salary) 
+--				   FROM Employees as c
+--				  WHERE p.DepartmentID = c.DepartmentID
+--				 )
