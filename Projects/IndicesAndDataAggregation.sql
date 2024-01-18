@@ -112,3 +112,67 @@
 --			   OVER (ORDER BY Id) - DepositAmount AS DepositDifference
 --		  FROM WizzardDeposits) AS a
 
+
+--13. Departments Total Salaries
+
+--   SELECT DepartmentId AS DepartmentID
+--		 ,SUM(Salary) AS TotalSalary
+--	FROM Employees
+--GROUP BY DepartmentID
+
+
+--14. Employees Minimum Salaries
+
+--  SELECT DepartmentID
+--		 ,MIN(Salary) AS MinSalary
+--	FROM Employees
+--   WHERE DepartmentID IN (2, 5, 7) AND HireDate > '2000-01-01'
+--GROUP BY DepartmentID
+
+
+--15. Employees Average Salaries
+
+--SELECT *
+--  INTO EmployeesNewTable
+--  FROM Employees
+-- WHERE Salary > 30000
+
+--DELETE FROM EmployeesNewTable WHERE ManagerID = 42
+
+--UPDATE EmployeesNewTable
+--SET Salary = Salary + 5000
+--WHERE DepartmentID = 1
+
+--  SELECT DepartmentID
+--		 ,AVG(Salary) AS AverageSalary
+--	FROM EmployeesNewTable
+--GROUP BY DepartmentID
+
+
+--16. Employees Maximum Salaries
+
+--  SELECT DepartmentID
+--		 ,MAX(Salary) AS MaxSalary
+--	FROM Employees
+--GROUP BY DepartmentID
+--  HAVING MAX(Salary) NOT BETWEEN 30000 AND 70000
+
+
+--17. Employees Count Salaries
+
+--SELECT COUNT(*) AS [Count]
+--  FROM Employees
+-- WHERE ManagerID IS NULL
+
+
+--18. 3rd Highest Salary
+
+--SELECT DISTINCT a.DepartmentID
+--	   ,a.Salary AS ThirdHighestSalary
+--  FROM (
+--		SELECT  DepartmentID
+--				,Salary
+--				,DENSE_RANK() OVER (PARTITION BY DepartmentID ORDER BY Salary DESC) AS SalaryRange
+--		   FROM Employees
+--		) AS a
+-- WHERE a.SalaryRange = 3
